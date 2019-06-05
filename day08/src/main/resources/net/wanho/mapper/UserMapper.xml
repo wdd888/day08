@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间指向对应的接口-->
+<mapper namespace="net.wanho.mapper.UserMapper">
+    <!--
+   id  对应接口中的方法名
+   parameterType   参数类型
+   -->
+    <insert id="insert" parameterType="User">
+            INSERT into USER VALUES(NULL,#{username},#{password},#{gender},#{pid})
+    </insert>
+    <insert id="insertReturnKey" useGeneratedKeys="true" keyProperty="id">
+         INSERT into USER VALUES(NULL,#{username},#{password},#{gender},#{pid})
+    </insert>
+    <insert id="insertReturnKey1">
+        <selectKey order="AFTER" keyProperty="id" resultType="int">
+            SELECT last_insert_id()
+        </selectKey>
+        INSERT into USER VALUES(NULL,#{username},#{password},#{gender},#{pid})
+    </insert>
+    <update id="updateUser">
+        UPDATE USER  set username=#{param1} ,password=#{param2} where id=#{param3}
+    </update>
+    <update id="updateUser1">
+        UPDATE USER  set username=#{username} ,password=#{password} where id=#{id}
+    </update>
+    <update id="updateUser2">
+     UPDATE USER  set username=#{user.username1} ,password=#{user.password} where id=#{id}
+    </update>
+
+
+    <resultMap id="userMap" type="User">
+        <id column="id" property="id"/>
+        <result column="username" property="username1"/>
+        <result column="password" property="password"/>
+        <result column="gender" property="gender"/>
+        <result column="pid" property="pid"/>
+    </resultMap>
+    <select id="selectAllUser" resultMap="userMap">
+        SELECT id,username ,password,gender,pid from USER
+    </select>
+    <select id="selectUserById" resultType="net.wanho.entity.User">
+        select * from USER WHERE id=#{id};
+    </select>
+    <select id="selectUserByName" resultType="net.wanho.entity.User">
+        SELECT * from user where username like #{name}
+    </select>
+    <select id="selectUserByName1" resultType="net.wanho.entity.User">
+        SELECT * from user where username like concat('%',#{username},'%')
+    </select>
+    <select id="selectUserByName2" resultType="net.wanho.entity.User">
+         SELECT * from user where username like '%${value}%'
+    </select>
+</mapper>
